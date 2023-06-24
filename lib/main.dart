@@ -18,20 +18,49 @@ class MyAppState extends State<MyApp> {
     super.initState();
   }
 
-  var fruits = ['Apple', 'Orange', 'Grapes', 'Guava'];
-
+  String? _convertedMeasure;
+  String? _startMeasures;
   @override
   Widget build(BuildContext context) {
+    final TextStyle inputStyle = TextStyle(
+      fontSize: 24,
+      color: Colors.blue[900],
+    );
+    final TextStyle labelStyle = TextStyle(
+      fontSize: 24,
+      color: Colors.grey[700],
+    );
+    final List<String> measures = [
+      'meters',
+      'kilometers',
+      'grams',
+      'kilograms',
+      'feet',
+      'miles',
+      'pounds (lbs)',
+      'ounces',
+    ];
     return MaterialApp(
       title: 'Measure Converter',
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Measures Converter'),
         ),
-        body: Center(
+        body: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
+              Spacer(),
+              Text(
+                'Value',
+                style: labelStyle,
+              ),
+              Spacer(),
               TextField(
+                style: inputStyle,
+                decoration: InputDecoration(
+                  hintText: "Please insert the measure to be converted",
+                ),
                 onChanged: (text) {
                   var rv = double.tryParse(text);
                   if (rv != null) {
@@ -40,11 +69,86 @@ class MyAppState extends State<MyApp> {
                     });
                   }
                 },
-                // ignore: unnecessary_null_comparison
               ),
-              Text((_numberFrom == null) ? '' : _numberFrom.toString())
+              // DropdownButton(
+              //   isExpanded: true,
+              //   style: inputStyle,
+              //   items: measures.map((String value) {
+              //     return DropdownMenuItem<String>(
+              //       value: value,
+              //       child: Text(
+              //         value,
+              //         style: inputStyle,
+              //       ),
+              //     );
+              //   }).toList(),
+              //   onChanged: (value) {
+              //     setState(() {
+              //       _convertedMeasure = value;
+              //     });
+              //   },
+              //   value: _convertedMeasure,
+              // ),
+              Spacer(),
+              Spacer(
+                flex: 2,
+              ),
 
-              // ignore: unnecessary_null_comparison
+              Spacer(),
+              Text(
+                'From',
+                style: labelStyle,
+              ),
+              DropdownButton(
+                isExpanded: true,
+                items: measures.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _startMeasures = value;
+                  });
+                },
+                value: _startMeasures,
+              ),
+              Spacer(),
+              Spacer(),
+              Text(
+                'To',
+                style: labelStyle,
+              ),
+              Spacer(),
+              DropdownButton(
+                isExpanded: true,
+                style: inputStyle,
+                items: measures.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: inputStyle,
+                    ),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _convertedMeasure = value;
+                  });
+                },
+                value: _convertedMeasure,
+              ),
+              Spacer(),
+              Spacer(),
+              ElevatedButton(
+                child: Text('Convert', style: inputStyle),
+                onPressed: () => true,
+              ),
+
+              Text((_numberFrom == null) ? '' : _numberFrom.toString(),
+                  style: labelStyle),
             ],
           ),
         ),
